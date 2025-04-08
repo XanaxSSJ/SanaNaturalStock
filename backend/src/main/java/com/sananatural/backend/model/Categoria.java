@@ -1,8 +1,6 @@
 package com.sananatural.backend.model;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class Categoria {
@@ -35,8 +33,4 @@ public class Categoria {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
-   // @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
-   // private List<Producto> productos = new ArrayList<>();
-
 }

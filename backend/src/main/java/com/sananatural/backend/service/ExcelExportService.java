@@ -20,7 +20,7 @@ public class ExcelExportService {
 
             // Encabezados
             Row headerRow = sheet.createRow(0);
-            String[] headers = {"ID Detalle", "ID Producto", "Nombre del Producto", "Cantidad"};
+            String[] headers = {"ID Detalle", "Codigo Producto", "Nombre", "Cantidad"};
 
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);
@@ -33,7 +33,7 @@ public class ExcelExportService {
                 Row row = sheet.createRow(rowIdx++);
 
                 row.createCell(0).setCellValue(detalle.getId());
-                row.createCell(1).setCellValue(detalle.getProductoId());
+                row.createCell(1).setCellValue(detalle.getCodigoProducto());
                 row.createCell(2).setCellValue(detalle.getNombreProducto());
                 row.createCell(3).setCellValue(detalle.getCantidad());
             }

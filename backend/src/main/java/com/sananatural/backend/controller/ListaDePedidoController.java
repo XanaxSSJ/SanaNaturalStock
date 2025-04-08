@@ -75,6 +75,7 @@ public class ListaDePedidoController {
                 .map(detalle -> new DetallePedidoDTO(
                         detalle.getId(),
                         detalle.getProducto().getId(),
+                        detalle.getProducto().getCodigo(),
                         detalle.getProducto().getNombre(),
                         detalle.getCantidad()
                 ))
@@ -97,6 +98,7 @@ public class ListaDePedidoController {
                 new DetallePedidoDTO(
                         detalle.getId(),
                         detalle.getProducto().getId(),
+                        detalle.getProducto().getCodigo(),
                         detalle.getProducto().getNombre(),
                         detalle.getCantidad()
                 )).toList();
