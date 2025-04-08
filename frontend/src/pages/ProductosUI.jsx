@@ -1,4 +1,9 @@
 import { useEffect, useState } from "react";
+import {
+    getProductosFiltrados,
+    getTiendas,
+    guardarListaDePedido
+} from "../api";
 import "./ProductosUI.css";
 
 export default function ProductosUI() {
@@ -14,21 +19,15 @@ export default function ProductosUI() {
     const [listaProductos, setListaProductos] = useState([]);
 
     useEffect(() => {
-        // Cargar productos
-        fetch("http://localhost:8080/api/productos/filtro")
-            .then(res => res.json())
-            .then(data => {
-                setProductos(data);
-                const cats = [...new Set(data.map(p => p.categoria))];
-                setCategorias(cats);
-                const provs = [...new Set(data.map(p => p.proveedor))];
-                setProveedores(provs);
-            });
+        getProductosFiltrados().then(data => {
+            setProductos(data);
+            const cats = [...new Set(data.map(p => p.categoria))];
+            setCategorias(cats);
+            const provs = [...new Set(data.map(p => p.proveedor))];
+            setProveedores(provs);
+        });
 
-        // Cargar tiendas
-        fetch("http://localhost:8080/api/tiendas")
-            .then(res => res.json())
-            .then(data => setTiendas(data));
+        getTiendas().then(data => setTiendas(data));
     }, []);
 
     const productosFiltrados = productos.filter(p => {
@@ -74,27 +73,29 @@ export default function ProductosUI() {
         };
 
         try {
-            const response = await fetch("http://localhost:8080/api/listas", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(payload)
-            });
+            const response = await guardarListaDePedido(payload);
+            const contentType = response.headers.get('content-type');
+
+            let message;
+            if (contentType && contentType.includes('application/json')) {
+                const data = await response.json();
+                message = data.mensaje || "Lista guardada exitosamente";
+            } else {
+                message = await response.text();
+            }
 
             if (response.ok) {
-                const text = await response.text();
-                alert(`✅ ${text}`);
+                alert(`✅ ${message}`);
                 setListaProductos([]);
                 setTiendaSeleccionada("");
             } else {
-                const error = await response.text();
-                alert("❌ Error al guardar la lista: " + error);
+                alert(`❌ Error al guardar la lista: ${message}`);
             }
         } catch (err) {
-            alert("❌ Error de red: " + err.message);
+            alert(`❌ Error de red: ${err.message}`);
         }
     };
+
 
 
     return (
